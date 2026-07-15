@@ -14,8 +14,8 @@ df = df.set_index("date")
 # calculate daily returns 
 df["daily_return"] = df["close"].pct_change()
 
-# create a cumulative return column #?
-df["cumulative_return"] = (1 + df["daily_return"]).cumprod() - 1
+# create a cumulative return column 
+df["cumulative_return"] = (1 + df["daily_return"]).cumprod() - 1 # cumulative product
 
 # calculate a 20-day moving average column
 df["ma_20"] = df["close"].rolling(window = 20).mean()
@@ -77,3 +77,5 @@ plt.ylabel("Drawdown")
 plt.grid(True)
 
 plt.savefig("outputs/aapl_drawdown.png")
+
+plt.close()
