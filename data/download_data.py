@@ -19,6 +19,7 @@ if df.empty:
 # Reset date index into a normal column
 df = df.reset_index()
 
+print(df.columns)
 # Keep only the columns we want
 df = df[["Date", "Open", "High", "Low", "Close", "Volume"]]
 
@@ -28,4 +29,3 @@ df.columns = ["date", "open", "high", "low", "close", "volume"]
 # Save to CSV
 df.to_csv("AAPL.csv", index=False)
 # index = False ensures the index is not saved as an extra col
-
