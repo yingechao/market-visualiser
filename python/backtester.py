@@ -1,4 +1,5 @@
 # simulate cash, position, trades, and portfolio value
+# turn signals into positions/returns/equity
 
 import pandas as pd
 import numpy as np
