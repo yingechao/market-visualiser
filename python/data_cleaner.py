@@ -49,13 +49,25 @@ def clean_price_data(filepath: str) -> pd.DataFrame:
     # if there are duplicate dates, keep the latest version
     df = df.drop_duplicates(subset="date", keep="last",)
 
-    # check high and low boundaries and ensure that low is never greater than high
-    df["high"] = df[["open", "high", "close"]].max(axis=1)
-    # Low must be <= open and close
-    df["low"] = df[["open", "low", "close"]].min(axis=1)
+    valid_ohlc = (
+        # High must be at least as large as open and close.
+        (df["high"] >= df[["open", "close"]].max(axis=1))
+
+        # Low must be at most as small as open and close.
+        & (df["low"] <= df[["open", "close"]].min(axis=1))
+
+        # High cannot be below low.
+        & (df["high"] >= df["low"])
+    )
+
+    df = df[valid_ohlc]
     
-    # Drop rows with impossible negative prices or volumes
-    df = df[(df[numeric_columns] >= 0).all(axis=1)]
+    # Drop rows with impossible negative prices 
+    price_columns = ["open", "high", "low", "close"]
+    # ensure rows only have valid values 
+    valid_prices = (df[price_columns] > 0).all(axis=1)
+    valid_volume = df["volume"] >= 0
+    df = df[valid_prices & valid_volume]
 
     # set date as the index
     df = df.set_index("date")
