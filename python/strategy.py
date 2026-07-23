@@ -28,5 +28,7 @@ def strategy(data: pd.DataFrame) -> pd.Series:
     # create signal series to return at the end 
 
     signal = pd.Series(data = 0, index = data.index, dtype= int, name="signal")
+    signal.loc[ma_20 > ma_50] = 1
 
+    return signal
 
