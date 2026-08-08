@@ -9,7 +9,7 @@ def add_metrics_col(results: pd.DataFrame,) -> pd.DataFrame:
     results = results.copy()
 
     # return from one row to the next
-    results["daily_return"] = (results["portfolio_value"].pct_change())
+    results["daily_return"] = (results["portfolio_value"].pct_change().fillna(0.0))
 
     # total return since the start of the backtest
     results["cumulative_return"] = (results["portfolio_value"] / results["portfolio_value"].iloc[0]) - 1
