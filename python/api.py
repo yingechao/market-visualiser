@@ -1,8 +1,22 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from run_backtest import run_pipeline
 
+
 app = FastAPI()
+
+# CORS section likely to change for deployment ************************
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5174",
+        "http://localhost:5174",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # defines what happens when someone sends a GET request to : http://localhost:8000/
 @app.get("/")
