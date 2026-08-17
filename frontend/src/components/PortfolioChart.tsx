@@ -17,23 +17,33 @@ interface PortfolioChartProps {
 function PortfolioChart({ results }: PortfolioChartProps) {
   return (
     <div style={{ width: "100%", height: 400 }}>
+      <h2>Portfolio Value</h2>
+
       <ResponsiveContainer>
         <LineChart data={results}>
-
           <CartesianGrid strokeDasharray="3 3" />
 
-          <XAxis dataKey="date" />
+          <XAxis
+            dataKey="date"
+            minTickGap={50}
+          />
 
-          <YAxis />
+          <YAxis
+            tickFormatter={(value) => `$${value.toLocaleString()}`}
+          />
 
-          <Tooltip />
+          <Tooltip
+            formatter={(value) => [
+              `$${Number(value).toLocaleString()}`,
+              "Portfolio Value"
+            ]}
+          />
 
           <Line
             type="monotone"
             dataKey="portfolio_value"
             dot={false}
           />
-
         </LineChart>
       </ResponsiveContainer>
     </div>
