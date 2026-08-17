@@ -8,19 +8,26 @@ export type BacktestSummary = {
   number_of_trades: number;
 };
 
-export type BacktestResult = {
+export interface BacktestResult {
   date: string;
   open: number;
   close: number;
+
   signal: number;
   action: string;
-  shares: number;
+
   cash: number;
+  shares: number;
+  stock_value: number;
   portfolio_value: number;
+
   daily_return: number;
   cumulative_return: number;
+  running_max: number;
   drawdown: number;
-};
+
+  trade_quality: number;
+}
 
 export type Trade = {
   date: string;
