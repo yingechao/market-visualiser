@@ -2,6 +2,10 @@
 import { useState } from "react";
 import type { BacktestResponse } from "./types";
 import PortfolioChart from "./components/PortfolioChart";
+import PriceChart from "./components/PriceChart";
+import DrawdownChart from "./components/drawdownChart";
+
+import "./styles.css";
 
 function App(){
 
@@ -40,8 +44,14 @@ return (
         <p>
         Ending value: {backtest.summary.ending_value}
         </p>
+        <div className="charts">
 
         <PortfolioChart results={backtest.results} />
+
+        <DrawdownChart results={backtest.results} />
+        
+        <PriceChart results = {backtest.results} />
+        </div>
     </div>
     )}
     
