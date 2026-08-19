@@ -29,7 +29,7 @@ export interface BacktestResult {
   trade_quality: number;
 }
 
-export type Trade = {
+export interface Trade {
   date: string;
   action: string;
   quantity: number;

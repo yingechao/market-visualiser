@@ -8,20 +8,63 @@ import {
   ResponsiveContainer
 } from "recharts";
 
-import type { BacktestResult } from "../types";
+import type { BacktestResult, Trade } from "../types";
+import { treemapPayloadSearcher } from "recharts/types/chart/Treemap";
 
 interface PriceChartProps {
   results: BacktestResult[];
+  trades: Trade[];
 }
 
-function PriceChart({ results }: PriceChartProps) {
+function TradeMarker(props: any) {
+  const { cx, cy, payload } = props;
+
+  if (payload.tradeAction === "buy") {
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={6}
+        fill="green"
+      />
+    );
+  }
+
+  if (payload.tradeAction === "sell") {
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={6}
+        fill="red"
+      />
+    );
+  }
+
+  return <></>;
+}
+
+function PriceChart({ results, trades }: PriceChartProps) {
+
+    const tradeMap = new Map(
+    trades.map((trade) => [trade.date, trade])
+  );
+
+  const chartData = results.map((result) => {
+    const trade = tradeMap.get(result.date);
+    return{
+      ...result, 
+      tradeAction: trade?.action ?? null,
+    };
+  });
+
   return (
     <div style={{ width: "100%", height: 400 }}>
 
       <h2>Price Value</h2>
 
       <ResponsiveContainer>
-        <LineChart data={results}>
+        <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
 
           <XAxis
@@ -43,7 +86,7 @@ function PriceChart({ results }: PriceChartProps) {
           <Line
             type="monotone"
             dataKey="close"
-            dot={false}
+            dot={<TradeMarker/>}
           />
         </LineChart>
       </ResponsiveContainer>

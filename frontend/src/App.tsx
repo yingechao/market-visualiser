@@ -50,7 +50,10 @@ return (
 
         <DrawdownChart results={backtest.results} />
         
-        <PriceChart results = {backtest.results} />
+        <PriceChart 
+        results = {backtest.results} 
+        trades = {backtest.trades}
+        />
         </div>
     </div>
     )}
