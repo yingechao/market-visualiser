@@ -2,20 +2,22 @@
 # turn signals into positions/returns/equity
 
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import yfinance as yf
-
-print("pandas:", pd.__version__)
-print("numpy:", np.__version__)
-print("Install works!")
+import math
 
 def create_sim(
     data: pd.DataFrame, 
     signals: pd.Series,
     init_cash: float = 10000.0,
+    transaction_cost_rate: float = 0.0,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    # ensure that every signal lines up with the same dates as the price data
+    if data.empty:
+        raise ValueError("Price data must not be empty.")
+    if not math.isfinite(init_cash) or init_cash <= 0:
+        raise ValueError("Initial cash must be positive and finite.")
+    if not math.isfinite(transaction_cost_rate) or not 0 <= transaction_cost_rate < 1:
+        raise ValueError("Transaction cost rate must be finite and between 0 and 1 (exclusive of 1).")
+    if not signals.isin([0, 1]).all():
+        raise ValueError("Signals must contain only 0 or 1.")
     if not data.index.equals(signals.index):
         raise ValueError(
             "The price data and signals must have matching indexes."
@@ -51,10 +53,10 @@ def create_sim(
             if (desired_pos_signal == 1 and shares == 0):
 
                 # calculate the number of shares to buy
-                shares_to_buy = int(cash // open_price)
+                shares_to_buy = int(cash // (open_price * (1 + transaction_cost_rate)))
 
                 if shares_to_buy > 0:
-                    cost = shares_to_buy * open_price
+                    cost = shares_to_buy * open_price * (1 + transaction_cost_rate)
                     cash -= cost
                     shares += shares_to_buy
 
@@ -66,7 +68,7 @@ def create_sim(
 
                 # calculate the number of shares to sell
                 shares_to_sell = shares
-                proceeds = shares_to_sell * open_price
+                proceeds = shares_to_sell * open_price * (1 - transaction_cost_rate)
 
                 cash += proceeds
                 shares = 0
@@ -86,7 +88,7 @@ def create_sim(
             "close": close_price,
             "signal": signals.iloc[i],
             "action": action,
-            "trade_quality": trade_quantity,
+            "trade_quantity": trade_quantity,
             "shares": shares,
             "cash":cash,
             "stock_value" : stock_value,
@@ -100,11 +102,12 @@ def create_sim(
                 "action": action, 
                 "quantity": trade_quantity,
                 "price": trade_price, 
+                "transaction_cost": trade_quantity * trade_price * transaction_cost_rate,
                 "cash_after_trade": cash,
                 "shares_after_trade": shares,
             })
 
-        results = pd.DataFrame(daily_records).set_index("date")
-        trades = pd.DataFrame(trade_records)
+    results = pd.DataFrame(daily_records).set_index("date")
+    trades = pd.DataFrame(trade_records)
 
     return results, trades

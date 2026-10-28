@@ -5,7 +5,8 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Legend
 } from "recharts";
 
 import type { BacktestResult } from "../types";
@@ -33,17 +34,19 @@ function PortfolioChart({ results }: PortfolioChartProps) {
           />
 
           <Tooltip
-            formatter={(value) => [
-              `$${Number(value).toLocaleString()}`,
-              "Portfolio Value"
-            ]}
+            formatter={(value) => `$${Number(value).toLocaleString()}`}
           />
+
+          <Legend />
 
           <Line
             type="monotone"
             dataKey="portfolio_value"
+            name="Strategy"
+            stroke="#2563eb"
             dot={false}
           />
+          <Line type="monotone" dataKey="benchmark_value" name="Buy and hold" stroke="#f59e0b" dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

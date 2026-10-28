@@ -6,6 +6,8 @@ def add_metrics_col(results: pd.DataFrame,) -> pd.DataFrame:
     # add times series performance metrics to the daily results
 
     # do not change the og dataframe
+    if results.empty:
+        raise ValueError("Results must not be empty.")
     results = results.copy()
 
     # return from one row to the next
@@ -25,6 +27,8 @@ def add_metrics_col(results: pd.DataFrame,) -> pd.DataFrame:
 def results_summary(results: pd.DataFrame, trades: pd.DataFrame,) -> dict:
     # return one overall summary of the backtest
 
+    if results.empty:
+        raise ValueError("Results must not be empty.")
     start_val = results["portfolio_value"].iloc[0]
     end_val = results["portfolio_value"].iloc[-1]
 

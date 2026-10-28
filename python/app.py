@@ -11,7 +11,6 @@ st.set_page_config(
 st.title("Market Strategy Backtester")
 
 data, signals, results, trades, summary = run_pipeline(
-    filepath="../data/AAPL.csv",
     initial_cash=10_000,
 )
 

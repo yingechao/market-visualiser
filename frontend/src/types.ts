@@ -6,6 +6,8 @@ export type BacktestSummary = {
   total_return: number;
   maximum_drawdown: number;
   number_of_trades: number;
+  benchmark_ending_value: number;
+  benchmark_total_return: number;
 };
 
 export interface BacktestResult {
@@ -20,13 +22,14 @@ export interface BacktestResult {
   shares: number;
   stock_value: number;
   portfolio_value: number;
+  benchmark_value: number;
 
   daily_return: number;
   cumulative_return: number;
   running_max: number;
   drawdown: number;
 
-  trade_quality: number;
+  trade_quantity: number;
 }
 
 export interface Trade {
@@ -34,6 +37,7 @@ export interface Trade {
   action: string;
   quantity: number;
   price: number;
+  transaction_cost: number;
   cash_after_trade: number;
   shares_after_trade: number;
 };

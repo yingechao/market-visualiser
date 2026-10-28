@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from run_backtest import run_pipeline
 
+# run: uvicorn api:app --reload
 
 app = FastAPI()
 
@@ -12,6 +13,8 @@ app.add_middleware(
     allow_origins=[
         "http://127.0.0.1:5174",
         "http://localhost:5174",
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -26,10 +29,10 @@ def root():
     }
 
 @app.get("/backtest")
-def get_backtest():
+def get_backtest(transaction_cost_rate: float = Query(0.0, ge=0, lt=1)):
     data, signals, results, trades, summary = run_pipeline(
-        filepath="../data/AAPL.csv", 
         initial_cash=10000,
+        transaction_cost_rate=transaction_cost_rate,
     )
     # convert the results into a dict
     results_json = results.reset_index() # resetting index brings the DataFrame index of results to a normal column which is easier to send the the frontend

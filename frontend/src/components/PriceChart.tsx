@@ -9,7 +9,6 @@ import {
 } from "recharts";
 
 import type { BacktestResult, Trade } from "../types";
-import { treemapPayloadSearcher } from "recharts/types/chart/Treemap";
 
 interface PriceChartProps {
   results: BacktestResult[];
@@ -55,6 +54,7 @@ function PriceChart({ results, trades }: PriceChartProps) {
     return{
       ...result, 
       tradeAction: trade?.action ?? null,
+      tradePrice: trade?.price ?? null,
     };
   });
 
@@ -77,17 +77,16 @@ function PriceChart({ results, trades }: PriceChartProps) {
           />
 
           <Tooltip
-            formatter={(value) => [
-              `$${Number(value).toLocaleString()}`,
-              "Asset Value"
-            ]}
+            formatter={(value) => `$${Number(value).toLocaleString()}`}
           />
 
           <Line
             type="monotone"
             dataKey="close"
-            dot={<TradeMarker/>}
+            name="Close"
+            dot={false}
           />
+          <Line dataKey="tradePrice" name="Execution price" stroke="none" dot={<TradeMarker />} isAnimationActive={false} connectNulls={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

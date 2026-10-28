@@ -1,20 +1,5 @@
 # generate buy/sell/hold signals 
 import pandas as pd
-from data_cleaner import clean_price_data
-
-data = clean_price_data("../data/AAPL.csv")
-print(data.head())
-print()
-print(data.dtypes)
-print()
-print(data.index)
-# data checking
-assert not data.empty
-assert data.index.is_monotonic_increasing
-assert not data.isna().any().any()
-assert not data.index.duplicated().any()
-
-print("Data cleaning passed.")
 
 def strategy(data: pd.DataFrame) -> pd.Series:
     # this is a moving average strategy 
