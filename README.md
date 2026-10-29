@@ -33,10 +33,10 @@ To run the alternative Streamlit dashboard, activate the environment and run `st
 
 ## Model assumptions
 
-- The strategy uses 20- and 50-session moving averages of closing prices. A signal generated at the close executes at the next session's open.
+- The strategy uses 20- and 50-session moving averages of closing prices to decide whether to hold the asset or cash. A change in position is executed at the next session’s open, subject to available cash.
 - The portfolio holds one asset or cash, with no short selling or fractional shares. Prices and dates come from the included historical CSV.
 - Transaction costs are a percentage of trade value, paid on each purchase and sale; they default to zero. The model does not include slippage or other execution effects.
-- The buy-and-hold benchmark purchases at the second session's open, the strategy's earliest possible execution, and holds to the end. It uses the same initial cash, whole-share rules and transaction cost. Neither portfolio is automatically liquidated at the end; holdings are valued at the final close.
+- The buy-and-hold benchmark attempts to purchase at the second session’s open, the earliest execution supported by the simulator. The moving-average strategy requires 50 sessions of price history before it can generate a buy signal. Both use the same initial cash, whole-share rules and transaction-cost rate. Remaining holdings are valued at the final close without being sold.
 - These are historical simulations, not evidence of future performance. The data cleaner validates prices but does not model corporate actions or verify the source's adjustment methodology.
 
 The Python `run_pipeline(filepath, initial_cash, transaction_cost_rate)` function accepts another OHLCV CSV and starting balance. The API accepts `transaction_cost_rate` as a decimal fraction; for example, `0.001` means 0.1% per trade.
